@@ -29,7 +29,7 @@ Test coverage reports are generated in the `coverage/` directory after running t
 
 1. Clone the repository:
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/pattharock/datastructs.git
    cd datastructs
    ```
 2. Install dependencies:
