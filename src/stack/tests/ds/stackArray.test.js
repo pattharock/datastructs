@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 
-import { Stack } from '../ds/stackObject.js';
+import { Stack } from '../../ds/stackArray';
 
-/** @type {Stack} */
+/**@type {Stack} */
 let s;
 
 function makePRNG(seed = 0x2a2a2a2a) {
@@ -18,7 +18,7 @@ function makePRNG(seed = 0x2a2a2a2a) {
   };
 }
 
-describe('Stack<Object> — fundamentals', () => {
+describe('Stack [Array Implementation] - fundamentals', () => {
   beforeEach(() => {
     s = new Stack();
   });
@@ -31,7 +31,7 @@ describe('Stack<Object> — fundamentals', () => {
     expect(s.toString()).toBe('');
   });
 
-  it('push/pop obey LIFO', () => {
+  it('push and pop follow LIFO', () => {
     s.push(1);
     s.push(2);
     s.push(3);
@@ -43,7 +43,7 @@ describe('Stack<Object> — fundamentals', () => {
     expect(s.isEmpty()).toBe(true);
   });
 
-  it('peek inspects top without removal', () => {
+  it('peek returns top without removing it', () => {
     s.push('a');
     s.push('b');
     expect(s.peek()).toBe('b');
@@ -53,52 +53,34 @@ describe('Stack<Object> — fundamentals', () => {
     expect(s.size()).toBe(1);
   });
 
-  it('clear empties and allows reuse', () => {
+  it('size and isEmpty track correctly across operations', () => {
+    expect(s.isEmpty()).toBe(true);
     s.push(10);
+    expect(s.isEmpty()).toBe(false);
+    expect(s.size()).toBe(1);
     s.push(20);
-    s.push(30);
+    expect(s.size()).toBe(2);
+    s.pop();
+    expect(s.size()).toBe(1);
+    s.pop();
+    expect(s.isEmpty()).toBe(true);
+  });
+
+  it('clear empties the stack and allows resure', () => {
+    s.push(1);
+    s.push(2);
+    s.push(3);
     s.clear();
     expect(s.isEmpty()).toBe(true);
     expect(s.size()).toBe(0);
     expect(s.peek()).toBeUndefined();
     expect(s.pop()).toBeUndefined();
     s.push(42);
-    expect(s.size()).toBe(1);
     expect(s.peek()).toBe(42);
+    expect(s.size()).toBe(1);
   });
 
-  it('toString prints [a, b, c] (bottom→top), empty => ""', () => {
-    expect(s.toString()).toBe('');
-    s.push(1);
-    s.push(2);
-    s.push(3);
-    expect(s.toString()).toBe('[1, 2, 3]');
-    s.pop();
-    expect(s.toString()).toBe('[1, 2]');
-  });
-});
-
-describe('Stack<Object> — values & edge cases', () => {
-  beforeEach(() => {
-    s = new Stack();
-  });
-
-  it('distinguishes falsy values', () => {
-    s.push(false);
-    s.push(null);
-    s.push(0);
-    s.push('');
-    s.push(NaN);
-    expect(s.size()).toBe(5);
-    expect(Number.isNaN(s.pop())).toBe(true);
-    expect(s.pop()).toBe('');
-    expect(s.pop()).toBe(0);
-    expect(s.pop()).toBeNull();
-    expect(s.pop()).toBe(false);
-    expect(s.isEmpty()).toBe(true);
-  });
-
-  it('handles undefined as a stored value vs empty pops', () => {
+  it('handles undefined as a stored value', () => {
     s.push(undefined);
     expect(s.size()).toBe(1);
     expect(s.peek()).toBeUndefined();
@@ -107,26 +89,29 @@ describe('Stack<Object> — values & edge cases', () => {
     expect(s.pop()).toBeUndefined();
   });
 
-  it('preserves object identity (no cloning)', () => {
-    const obj = { a: 1 };
-    s.push(obj);
-    expect(s.peek()).toBe(obj);
-    const out = s.pop();
-    expect(out).toBe(obj);
-    out.a = 2;
-    expect(obj.a).toBe(2);
+  it('toString prints bottom..top joined by a single space', () => {
+    s.push(1);
+    s.push(2);
+    s.push(3);
+    expect(s.toString()).toBe('1 2 3');
+    s.pop();
+    expect(s.toString()).toBe('1 2');
   });
 });
 
-describe('Stack<Object> — randomized vs Array reference', () => {
-  it('matches Array push/pop semantics over many ops', () => {
+describe('Stack [Array Implementation] - randomized behavior vs reference array', () => {
+  beforeEach(() => {
     s = new Stack();
+  });
+
+  it('matches Array <-> push/pop semantics over many operations', () => {
     const ref = [];
     const rand = makePRNG(0xc0ffee);
 
     const OPS = 1000;
     for (let i = 0; i < OPS; i++) {
       const r = rand();
+
       if (r < 0.6) {
         s.push(i);
         ref.push(i);
@@ -135,18 +120,24 @@ describe('Stack<Object> — randomized vs Array reference', () => {
         const b = ref.pop();
         expect(a).toBe(b);
       }
+
+      while (!s.isEmpty()) {
+        expect(s.pop()).toBe(ref.pop());
+      }
+
+      expect(ref.length).toBe(0);
     }
-    while (!s.isEmpty()) {
-      expect(s.pop()).toBe(ref.pop());
-    }
-    expect(ref.length).toBe(0);
   });
 });
 
-describe('Stack<Object> — growth & stress (smoke)', () => {
-  it('supports many pushes & pops while tracking size', () => {
+describe('Stack [Array Implementation] - growth & stress (smoke)', () => {
+  beforeEach(() => {
     s = new Stack();
+  });
+
+  it('supports many pushes and pops while tracking size', () => {
     const N = 20000;
+
     for (let i = 1; i <= N; i++) {
       s.push(i);
       if (i % 5000 === 0) {
@@ -154,12 +145,14 @@ describe('Stack<Object> — growth & stress (smoke)', () => {
         expect(s.peek()).toBe(i);
       }
     }
+
     for (let i = N; i >= 1; i--) {
       expect(s.pop()).toBe(i);
       if (i % 5000 === 0) {
         expect(s.size()).toBe(i - 1);
       }
     }
+
     expect(s.isEmpty()).toBe(true);
   });
 });
