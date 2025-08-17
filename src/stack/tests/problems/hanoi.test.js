@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import {
   hanoi,
@@ -6,6 +6,7 @@ import {
   initTowers,
   applyMove,
   simulateGame,
+  printSnapshots,
 } from '../../problems/hanoi.js';
 
 function expectedMoveCount(n) {
@@ -116,5 +117,51 @@ describe('simulateGame()', () => {
     const rec = hanoi(3, 'A', 'B', 'C');
     const { moves: itr } = simulateGame(3);
     expect(itr).toEqual(rec);
+  });
+});
+
+describe('printSnapshots()', () => {
+  let spy;
+
+  beforeEach(() => {
+    spy = vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    spy.mockRestore();
+  });
+
+  it('prints header + A/B/C + blank line for each snapshot', () => {
+    const { snapshots } = simulateGame(2);
+
+    printSnapshots(snapshots);
+
+    const n = snapshots.length;
+    expect(spy).toHaveBeenCalledTimes(n * 5);
+
+    for (let i = 0; i < n; i++) {
+      const base = i * 5;
+      const headerArg = spy.mock.calls[base][0];
+      if (snapshots[i].move === 0) {
+        expect(headerArg).toBe('SIMULATION BEGINS');
+      } else {
+        const { move, from, to } = snapshots[i];
+        expect(headerArg).toMatch(new RegExp(`^Move ${move}: ${from} -> ${to}$`));
+      }
+
+      expect(spy.mock.calls[base + 1][0]).toMatch(/^A:\s/);
+      expect(spy.mock.calls[base + 2][0]).toMatch(/^B:\s/);
+      expect(spy.mock.calls[base + 3][0]).toMatch(/^C:\s/);
+      expect(spy.mock.calls[base + 4].length).toBe(0);
+    }
+
+    const lastHeaderIdx = (n - 1) * 5;
+    const lastMove = snapshots[n - 1].move;
+    expect(spy.mock.calls[lastHeaderIdx][0]).toMatch(new RegExp(`^Move ${lastMove}:`));
+  });
+
+  it('prints nothing for empty snapshots array', () => {
+    printSnapshots([]);
+    expect(spy).not.toHaveBeenCalled();
   });
 });
