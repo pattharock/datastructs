@@ -1,0 +1,42 @@
+{
+  "name": "datastructs",
+  "version": "1.0.0",
+  "description": "Implementing core data-structures in JS",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:related": "vitest related --run --reporter=dot --slient",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "format": "prettier -w .",
+    "check": "eslint . && prettier -c .",
+    "prepare": "husky"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@vitest/coverage-v8": "^3.2.4",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^16.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
+    "prettier": "^3.6.2",
+    "vitest": "^3.2.4"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,json.md}": [
+      "prettier -w"
+    ],
+    "*.{js,mjs}": [
+      "eslint --fix"
+    ],
+    "index.test.js": ["vitest run --reporter=dot --silent=true"],
+    "src/**/tests/**/*.test.js": ["vitest run --reporter=dot --silent=true"]
+  }
+}
