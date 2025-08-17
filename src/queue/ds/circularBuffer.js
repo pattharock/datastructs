@@ -59,7 +59,6 @@ export class CircularBuffer {
     }
 
     if (this.#count < Math.floor(currentCapacity / 4)) {
-      ``;
       const newCapacity = Math.max(this.#MIN_CAP, Math.floor(currentCapacity / 2));
       this._resize(newCapacity);
     }

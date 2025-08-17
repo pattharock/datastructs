@@ -117,4 +117,29 @@ describe('CircularBuffer — shrink behavior', () => {
     cb.enqueue('Y');
     expect(cb.toString()).toBe('[ X Y ]');
   });
+
+  it('exercises shrink branch (under-utilized at a check boundary) and remains correct', () => {
+    const cb = new CircularBuffer(3);
+    const TOTAL = 400;
+    for (let i = 0; i < TOTAL; i++) cb.enqueue(i);
+
+    for (let i = 0; i < TOTAL; i++) {
+      expect(cb.dequeue()).toBe(i);
+    }
+    expect(cb.isEmpty()).toBe(true);
+
+    for (let i = 0; i < 300; i++) {
+      cb.enqueue(1000 + i);
+      expect(cb.dequeue()).toBe(1000 + i);
+    }
+
+    cb.enqueue('x');
+    cb.enqueue('y');
+    cb.enqueue('z');
+    expect(cb.front()).toBe('x');
+    expect(cb.dequeue()).toBe('x');
+    expect(cb.dequeue()).toBe('y');
+    expect(cb.dequeue()).toBe('z');
+    expect(cb.isEmpty()).toBe(true);
+  });
 });
