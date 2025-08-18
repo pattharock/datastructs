@@ -1,4 +1,4 @@
-import { CircularBuffer } from '../ds/circularBuffer';
+import { CircularBuffer } from '../ds/circularBuffer.js';
 
 export function hotPotato(elementList, num) {
   let dq = new CircularBuffer();
