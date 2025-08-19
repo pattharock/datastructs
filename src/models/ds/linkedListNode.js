@@ -1,7 +1,7 @@
 export class Node {
-  constructor(element) {
+  constructor(element, next = null) {
     this.element = element;
-    this.next = null;
+    this.next = next;
   }
 
   toString() {
