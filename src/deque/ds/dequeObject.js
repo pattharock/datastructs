@@ -9,6 +9,7 @@ export class Deque {
     this.#head = 0;
     this.#tail = 0;
     this.#count = 0;
+    this.label = label;
   }
 
   pushBack(element) {

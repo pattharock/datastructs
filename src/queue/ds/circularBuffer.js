@@ -28,7 +28,6 @@ export class CircularBuffer {
   }
 
   _resize(newCapacity) {
-    const old = this.#items;
     const n = this.#items.length;
 
     const newItems = new Array(newCapacity);
