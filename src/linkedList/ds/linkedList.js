@@ -1,5 +1,5 @@
 import { defaultEquals } from '../../../utils/index.js';
-import { Node } from '../../models/linkedListNode.js';
+import { Node } from '../../models/ds/linkedListNode.js';
 
 export class LinkedList {
   #count;
@@ -144,5 +144,19 @@ export class LinkedList {
 
   getHead() {
     return this.#head;
+  }
+
+  toString() {
+    if (!this.getHead()) return ';';
+
+    let objString = `[${this.#head.element}`;
+
+    let current = this.#head.next;
+    while (current !== null) {
+      objString += ` ${current.element}`;
+      current = current.next;
+    }
+
+    return objString + `]`;
   }
 }
