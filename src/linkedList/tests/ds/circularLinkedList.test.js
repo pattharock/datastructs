@@ -14,6 +14,7 @@ describe('Circular Linked List - functional tests', () => {
     expect(cll.isEmpty()).toBe(true);
     expect(cll.getHead()).toBeUndefined();
     expect(cll.head).toBe(null);
+    expect(cll.toString()).toBe('');
   });
 
   it('PUSH(e) functions as expected', () => {
@@ -41,6 +42,36 @@ describe('Circular Linked List - functional tests', () => {
     cll.push(3);
     expect(cll.toString()).toBe('1 2 3');
     expect(cll.size()).toBe(3);
+    expect(cll.isEmpty()).toBe(false);
+    expect(cll.getHead()).toEqual(
+      expect.objectContaining({
+        element: 1,
+      })
+    );
+
+    cll.push(4);
+    expect(cll.toString()).toBe('1 2 3 4');
+    expect(cll.size()).toBe(4);
+    expect(cll.isEmpty()).toBe(false);
+    expect(cll.getHead()).toEqual(
+      expect.objectContaining({
+        element: 1,
+      })
+    );
+
+    cll.push(5);
+    expect(cll.toString()).toBe('1 2 3 4 5');
+    expect(cll.size()).toBe(5);
+    expect(cll.isEmpty()).toBe(false);
+    expect(cll.getHead()).toEqual(
+      expect.objectContaining({
+        element: 1,
+      })
+    );
+
+    cll.push(6);
+    expect(cll.toString()).toBe('1 2 3 4 5 6');
+    expect(cll.size()).toBe(6);
     expect(cll.isEmpty()).toBe(false);
     expect(cll.getHead()).toEqual(
       expect.objectContaining({

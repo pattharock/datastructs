@@ -103,6 +103,18 @@ describe('DoublyLinkedList', () => {
     expectIntegrity(list);
   });
 
+  it('removeAt(index) rejects out of bounds', () => {
+    expect(list.removeAt(-1)).toBeUndefined();
+    list.push(20);
+    expect(list.removeAt(-1)).toBeUndefined();
+  });
+
+  it('remove(element) handles empty list', () => {
+    expect(list.remove(100)).toBeUndefined();
+    list.push(20);
+    expect(list.removeAt(-1)).toBeUndefined();
+  });
+
   it('remove(element) removes first match (head/middle/tail) and returns node', () => {
     [1, 2, 2, 3].forEach((v) => list.push(v));
 

@@ -133,8 +133,7 @@ export class DoublyLinkedList extends LinkedList {
 
   remove(element) {
     if (!this.head) return undefined;
-
-    const eq = this.equalsFn ?? ((a, b) => a === b);
+    const eq = this.equalsFn;
 
     if (this.head === this.tail && eq(this.head.element, element)) {
       const toDelete = this.head;
