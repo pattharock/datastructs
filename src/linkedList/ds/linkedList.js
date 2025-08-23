@@ -2,44 +2,69 @@ import { defaultEquals } from '../../../utils/index.js';
 import { Node } from '../../models/ds/linkedListNode.js';
 
 export class LinkedList {
-  #count;
-  #head;
+  count;
+  head;
 
   constructor(equalsFn = defaultEquals) {
-    this.#count = 0;
-    this.#head = undefined;
+    this.count = 0;
+    this.head = undefined;
     this.equalsFn = equalsFn;
   }
 
-  push(element) {
-    const node = new Node(element);
+  getElementAt(index) {
+    if (index < 0 || index > this.count - 1) return undefined;
 
-    if (!this.#head) {
-      this.#head = node;
-    } else {
-      let current = this.#head;
-      while (current.next != null) {
-        current = current.next;
-      }
-      current.next = node;
+    let current = this.head;
+    for (let i = 0; i < index; i++) {
+      current = current.next;
     }
 
-    this.#count++;
+    return current;
+  }
+
+  remove(element) {
+    if (!this.head) return undefined;
+
+    let previous;
+    let current = this.head;
+
+    if (this.equalsFn(this.head.element, element)) {
+      const toDelete = this.head;
+      this.head = this.head.next;
+      toDelete.next = null;
+      this.count--;
+      return toDelete;
+    }
+
+    while (current.next !== null && !this.equalsFn(current.element, element)) {
+      previous = current;
+      current = current.next;
+    }
+
+    if (this.equalsFn(element, current.element)) {
+      const toDelete = current;
+      previous.next = current.next;
+      toDelete.next = null;
+      this.count--;
+      return toDelete;
+    }
+
+    return undefined;
   }
 
   removeAt(index) {
-    if (index < 0 || index >= this.#count) return undefined;
+    if (index < 0 || index >= this.count) return undefined;
 
-    this.#count--;
+    this.count--;
     if (index === 0) {
-      const toDelete = this.#head;
-      this.#head = this.#head.next;
+      const toDelete = this.head;
+      this.head = this.head.next;
       toDelete.next = null;
       return toDelete;
     }
 
     let previous;
-    let current = this.#head;
+    let current = this.head;
 
     for (let i = 0; i < index; i++) {
       previous = current;
@@ -53,29 +78,34 @@ export class LinkedList {
     return toDelete;
   }
 
-  getElementAt(index) {
-    if (index < 0 || index > this.#count - 1) return undefined;
+  push(element) {
+    const node = new Node(element);
 
-    let current = this.#head;
-    for (let i = 0; i < index; i++) {
-      current = current.next;
+    if (!this.head) {
+      this.head = node;
+    } else {
+      let current = this.head;
+      while (current.next != null) {
+        current = current.next;
+      }
+      current.next = node;
     }
 
-    return current;
+    this.count++;
   }
 
   insert(element, index) {
-    if (index < 0 || index > this.#count) return false;
+    if (index < 0 || index > this.count) return false;
 
     const node = new Node(element);
-    this.#count++;
+    this.count++;
 
     if (index === 0) {
-      node.next = this.#head;
-      this.#head = node;
+      node.next = this.head;
+      this.head = node;
     } else {
       let previous;
-      let current = this.#head;
+      let current = this.head;
 
       for (let i = 0; i < index; i++) {
         previous = current;
@@ -91,7 +121,7 @@ export class LinkedList {
 
   indexOf(element) {
     let index = 0;
-    let current = this.#head;
+    let current = this.head;
 
     while (current !== null) {
       if (this.equalsFn(element, current.element)) {
@@ -104,38 +134,8 @@ export class LinkedList {
     return -1;
   }
 
-  remove(element) {
-    if (!this.#head) return undefined;
-
-    let previous;
-    let current = this.#head;
-
-    if (this.equalsFn(this.#head.element, element)) {
-      const toDelete = this.#head;
-      this.#head = this.#head.next;
-      toDelete.next = null;
-      this.#count--;
-      return toDelete;
-    }
-
-    while (current.next !== null && !this.equalsFn(current.element, element)) {
-      previous = current;
-      current = current.next;
-    }
-
-    if (this.equalsFn(element, current.element)) {
-      const toDelete = current;
-      previous.next = current.next;
-      toDelete.next = null;
-      this.#count--;
-      return toDelete;
-    }
-
-    return undefined;
-  }
-
   size() {
-    return this.#count;
+    return this.count;
   }
 
   isEmpty() {
@@ -143,15 +143,15 @@ export class LinkedList {
   }
 
   getHead() {
-    return this.#head;
+    return this.head;
   }
 
   toString() {
     if (!this.getHead()) return ';';
 
-    let objString = `[${this.#head.element}`;
+    let objString = `[${this.head.element}`;
 
-    let current = this.#head.next;
+    let current = this.head.next;
     while (current !== null) {
       objString += ` ${current.element}`;
       current = current.next;
