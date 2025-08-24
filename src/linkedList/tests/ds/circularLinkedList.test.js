@@ -137,6 +137,16 @@ describe('Circular Linked List - functional tests', () => {
       })
     );
     expect(cll.toString()).toEqual('2 1 3');
+
+    expect(cll.insert(1000, 0)).toBe(true);
+    expect(cll.isEmpty()).toBe(false);
+    expect(cll.size()).toBe(4);
+    expect(cll.getHead()).toEqual(
+      expect.objectContaining({
+        element: 1000,
+      })
+    );
+    expect(cll.toString()).toEqual('1000 2 1 3');
   });
 
   it('GETELEMENTAT returns undefined for empty list and out-of-bounds indexes', () => {
