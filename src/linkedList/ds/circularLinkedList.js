@@ -67,6 +67,19 @@ export class CircularLinkedList {
     return true;
   }
 
+  getElementAt(index) {
+    if (!this.head) return undefined;
+    if (index < 0 || index >= this.count) return undefined;
+
+    let currentNode = this.head;
+
+    for (let i = 0; i < index; i++) {
+      currentNode = currentNode.next;
+    }
+
+    return currentNode;
+  }
+
   getHead() {
     return this.head ?? undefined;
   }
@@ -97,5 +110,3 @@ export class CircularLinkedList {
     return `${strObject} ${current.element.toString()}`;
   }
 }
-
-const a = new CircularLinkedList();
