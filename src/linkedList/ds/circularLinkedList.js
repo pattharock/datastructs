@@ -1,3 +1,4 @@
+import { RuleTester } from 'eslint';
 import { defaultEquals } from '../../../utils/index.js';
 import { CircularNode } from '../../models/ds/circularLinkedListNode.js';
 
@@ -115,6 +116,56 @@ export class CircularLinkedList {
     toDelete.next = null;
     this.count--;
     return toDelete;
+  }
+
+  remove(element) {
+    const eq = this.equalsfn;
+
+    if (!this.head) return undefined;
+
+    if (eq(this.head.element, element)) {
+      if (this.head.next === this.head) {
+        const toDelete = this.head;
+        this.head = null;
+        toDelete.next = null;
+        this.count--;
+        return toDelete;
+      }
+      let previousNode = this.head.next;
+      while (previousNode.next !== this.head) {
+        previousNode = previousNode.next;
+      }
+      const toDelete = this.head;
+      const nextNode = this.head.next;
+      previousNode.next = nextNode;
+      toDelete.next = null;
+      this.head = nextNode;
+      this.count--;
+      return toDelete;
+    }
+
+    let prevNode;
+    let currNode = this.head;
+
+    while (currNode.next != this.head) {
+      if (eq(currNode.element, element)) {
+        let nextNode = currNode.next;
+        prevNode.next = nextNode;
+        currNode.next = null;
+        this.count--;
+        return currNode;
+      } else {
+        prevNode = currNode;
+        currNode = currNode.next;
+      }
+    }
+
+    if (eq(currNode.element, element)) {
+      prevNode.next = currNode.next;
+      currNode.next = null;
+      this.count--;
+      return currNode;
+    }
   }
 
   getHead() {

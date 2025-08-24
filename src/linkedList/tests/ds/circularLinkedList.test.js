@@ -355,4 +355,92 @@ describe('Circular Linked List - functional tests', () => {
     expect(cll.getHead()).toBeUndefined();
     expect(cll.toString()).toBe('');
   });
+
+  it('REMOVE returns undefined for empty list and when element not found', () => {
+    expect(cll.remove(1)).toBeUndefined();
+    [1, 2, 3].forEach((v) => cll.push(v));
+    expect(cll.size()).toBe(3);
+    expect(cll.remove(999)).toBeUndefined();
+    expect(cll.toString()).toBe('1 2 3');
+  });
+
+  it('REMOVE on single-element list clears the list', () => {
+    cll.push(42);
+    expect(cll.size()).toBe(1);
+    const removed = cll.remove(42);
+    expect(removed).toEqual(expect.objectContaining({ element: 42 }));
+    expect(cll.size()).toBe(0);
+    expect(cll.isEmpty()).toBe(true);
+    expect(cll.getHead()).toBeUndefined();
+    expect(cll.head).toBe(null);
+    expect(cll.toString()).toBe('');
+  });
+
+  it('REMOVE removes head and re-links the circle', () => {
+    [1, 2, 3, 4, 5].forEach((v) => cll.push(v));
+    expect(cll.size()).toBe(5);
+    const removed = cll.remove(1);
+    expect(removed).toEqual(expect.objectContaining({ element: 1 }));
+    expect(cll.size()).toBe(4);
+    expect(cll.getHead()).toEqual(expect.objectContaining({ element: 2 }));
+    expect(cll.toString()).toBe('2 3 4 5');
+    let curr = cll.getHead();
+    for (let i = 0; i < cll.size() - 1; i++) curr = curr.next;
+    expect(curr.next).toBe(cll.getHead());
+  });
+
+  it('REMOVE removes a middle element and preserves order', () => {
+    [10, 20, 30, 40, 50].forEach((v) => cll.push(v));
+    expect(cll.size()).toBe(5);
+    const removed = cll.remove(30);
+    expect(removed).toEqual(expect.objectContaining({ element: 30 }));
+    expect(cll.size()).toBe(4);
+    expect(cll.toString()).toBe('10 20 40 50');
+    expect(cll.getElementAt(0)).toEqual(expect.objectContaining({ element: 10 }));
+    expect(cll.getElementAt(1)).toEqual(expect.objectContaining({ element: 20 }));
+    expect(cll.getElementAt(2)).toEqual(expect.objectContaining({ element: 40 }));
+    expect(cll.getElementAt(3)).toEqual(expect.objectContaining({ element: 50 }));
+    expect(cll.getElementAt(4)).toBeUndefined();
+  });
+
+  it('REMOVE removes the last element and keeps circle valid', () => {
+    [1, 2, 3, 4].forEach((v) => cll.push(v));
+    expect(cll.size()).toBe(4);
+    const removed = cll.remove(4);
+    expect(removed).toEqual(expect.objectContaining({ element: 4 }));
+    expect(cll.size()).toBe(3);
+    expect(cll.toString()).toBe('1 2 3');
+    let curr = cll.getHead();
+    for (let i = 0; i < cll.size() - 1; i++) curr = curr.next;
+    expect(curr.next).toBe(cll.getHead());
+  });
+
+  it('REMOVE removes only the first matching element when duplicates exist', () => {
+    [5, 6, 7, 6, 8].forEach((v) => cll.push(v));
+    expect(cll.size()).toBe(5);
+    const removed = cll.remove(6);
+    expect(removed).toEqual(expect.objectContaining({ element: 6 }));
+    expect(cll.size()).toBe(4);
+    expect(cll.toString()).toBe('5 7 6 8');
+    const removed2 = cll.remove(6);
+    expect(removed2).toEqual(expect.objectContaining({ element: 6 }));
+    expect(cll.size()).toBe(3);
+    expect(cll.toString()).toBe('5 7 8');
+  });
+
+  it('REMOVE can drain the list by removing head repeatedly', () => {
+    [9, 10, 11].forEach((v) => cll.push(v));
+    expect(cll.size()).toBe(3);
+    expect(cll.remove(9)).toEqual(expect.objectContaining({ element: 9 }));
+    expect(cll.size()).toBe(2);
+    expect(cll.toString()).toBe('10 11');
+    expect(cll.remove(10)).toEqual(expect.objectContaining({ element: 10 }));
+    expect(cll.size()).toBe(1);
+    expect(cll.toString()).toBe('11');
+    expect(cll.remove(11)).toEqual(expect.objectContaining({ element: 11 }));
+    expect(cll.size()).toBe(0);
+    expect(cll.isEmpty()).toBe(true);
+    expect(cll.getHead()).toBeUndefined();
+    expect(cll.toString()).toBe('');
+  });
 });
