@@ -265,4 +265,94 @@ describe('Circular Linked List - functional tests', () => {
     expect(cll.getElementAt(1)).toBeUndefined();
     expect(cll.getElementAt(-1)).toBeUndefined();
   });
+
+  it('REMOVEAT returns undefined for empty list and out-of-bounds indexes', () => {
+    expect(cll.removeAt(0)).toBeUndefined();
+    expect(cll.removeAt(1)).toBeUndefined();
+    expect(cll.removeAt(-1)).toBeUndefined();
+
+    [10, 20, 30].forEach((v) => cll.push(v));
+    expect(cll.size()).toBe(3);
+    expect(cll.removeAt(-1)).toBeUndefined();
+    expect(cll.removeAt(3)).toBeUndefined();
+    expect(cll.removeAt(99)).toBeUndefined();
+    expect(cll.toString()).toBe('10 20 30');
+  });
+
+  it('REMOVEAT on single-element list clears the list', () => {
+    cll.push(42);
+    expect(cll.size()).toBe(1);
+
+    const removed = cll.removeAt(0);
+    expect(removed).toEqual(expect.objectContaining({ element: 42 }));
+    expect(cll.size()).toBe(0);
+    expect(cll.isEmpty()).toBe(true);
+    expect(cll.getHead()).toBeUndefined();
+    expect(cll.head).toBe(null);
+    expect(cll.toString()).toBe('');
+  });
+
+  it('REMOVEAT removes head (index 0) and re-links the circle', () => {
+    [1, 2, 3, 4, 5].forEach((v) => cll.push(v));
+    expect(cll.size()).toBe(5);
+
+    const removed = cll.removeAt(0);
+    expect(removed).toEqual(expect.objectContaining({ element: 1 }));
+    expect(cll.size()).toBe(4);
+    expect(cll.getHead()).toEqual(expect.objectContaining({ element: 2 }));
+    expect(cll.toString()).toBe('2 3 4 5');
+
+    let curr = cll.getHead();
+    for (let i = 0; i < cll.size() - 1; i++) curr = curr.next;
+    expect(curr.next).toBe(cll.getHead());
+  });
+
+  it('REMOVEAT removes a middle element and preserves order', () => {
+    [10, 20, 30, 40, 50].forEach((v) => cll.push(v));
+    expect(cll.size()).toBe(5);
+
+    const removed = cll.removeAt(2);
+    expect(removed).toEqual(expect.objectContaining({ element: 30 }));
+    expect(cll.size()).toBe(4);
+    expect(cll.toString()).toBe('10 20 40 50');
+
+    expect(cll.getElementAt(0)).toEqual(expect.objectContaining({ element: 10 }));
+    expect(cll.getElementAt(1)).toEqual(expect.objectContaining({ element: 20 }));
+    expect(cll.getElementAt(2)).toEqual(expect.objectContaining({ element: 40 }));
+    expect(cll.getElementAt(3)).toEqual(expect.objectContaining({ element: 50 }));
+    expect(cll.getElementAt(4)).toBeUndefined();
+  });
+
+  it('REMOVEAT removes the last element (index size-1) and keeps circle valid', () => {
+    [1, 2, 3, 4].forEach((v) => cll.push(v));
+    expect(cll.size()).toBe(4);
+
+    const removed = cll.removeAt(3);
+    expect(removed).toEqual(expect.objectContaining({ element: 4 }));
+    expect(cll.size()).toBe(3);
+    expect(cll.toString()).toBe('1 2 3');
+
+    let curr = cll.getHead();
+    for (let i = 0; i < cll.size() - 1; i++) curr = curr.next;
+    expect(curr.next).toBe(cll.getHead());
+  });
+
+  it('REMOVEAT can drain the list with repeated removals at head', () => {
+    [5, 6, 7].forEach((v) => cll.push(v));
+    expect(cll.size()).toBe(3);
+
+    expect(cll.removeAt(0)).toEqual(expect.objectContaining({ element: 5 }));
+    expect(cll.size()).toBe(2);
+    expect(cll.toString()).toBe('6 7');
+
+    expect(cll.removeAt(0)).toEqual(expect.objectContaining({ element: 6 }));
+    expect(cll.size()).toBe(1);
+    expect(cll.toString()).toBe('7');
+
+    expect(cll.removeAt(0)).toEqual(expect.objectContaining({ element: 7 }));
+    expect(cll.size()).toBe(0);
+    expect(cll.isEmpty()).toBe(true);
+    expect(cll.getHead()).toBeUndefined();
+    expect(cll.toString()).toBe('');
+  });
 });

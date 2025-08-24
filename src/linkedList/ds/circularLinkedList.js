@@ -80,6 +80,43 @@ export class CircularLinkedList {
     return currentNode;
   }
 
+  removeAt(index) {
+    if (!this.head) return undefined;
+    if (index < 0 || index >= this.count) return undefined;
+
+    if (this.head.next === this.head) {
+      const toDelete = this.head;
+      this.head = null;
+      toDelete.next = null;
+      this.count--;
+      return toDelete;
+    }
+
+    if (index === 0) {
+      let current = this.head.next;
+      while (current.next !== this.head) {
+        current = current.next;
+      }
+
+      const toDelete = this.head;
+      current.next = toDelete.next;
+      this.head = toDelete.next;
+      toDelete.next = null;
+      this.count--;
+      return toDelete;
+    }
+
+    let current = this.head;
+    for (let i = 0; i < index - 1; i++) {
+      current = current.next;
+    }
+    const toDelete = current.next;
+    current.next = toDelete.next;
+    toDelete.next = null;
+    this.count--;
+    return toDelete;
+  }
+
   getHead() {
     return this.head ?? undefined;
   }
