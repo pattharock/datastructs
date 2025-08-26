@@ -36,7 +36,7 @@ export class LinkedList {
       return toDelete;
     }
 
-    while (current.next !== null && !this.equalsFn(current.element, element)) {
+    while (current.next && !this.equalsFn(current.element, element)) {
       previous = current;
       current = current.next;
     }
@@ -123,7 +123,7 @@ export class LinkedList {
     let index = 0;
     let current = this.head;
 
-    while (current !== null) {
+    while (current) {
       if (this.equalsFn(element, current.element)) {
         return index;
       }
