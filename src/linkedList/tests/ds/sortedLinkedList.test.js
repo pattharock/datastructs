@@ -51,6 +51,27 @@ describe('SortedLinkedList', () => {
     expect(list.indexOf(2)).toBe(0);
   });
 
+  it('works correctly with the defaultCompare (no custom comparator passed)', () => {
+    const defaultList = new SortedLinkedList();
+    [5, 1, 3, 2, 4].forEach((x) => defaultList.insert(x));
+    const values = [];
+    for (let i = 0; i < defaultList.size(); i++) {
+      values.push(defaultList.getElementAt(i).element);
+    }
+    expect(values).toEqual([1, 2, 3, 4, 5]);
+
+    defaultList.insert(3);
+    const dupValues = [];
+    for (let i = 0; i < defaultList.size(); i++) {
+      dupValues.push(defaultList.getElementAt(i).element);
+    }
+    expect(dupValues).toEqual([1, 2, 3, 3, 4, 5]);
+
+    expect(defaultList.getInsertionIndex(0)).toBe(0);
+    expect(defaultList.getInsertionIndex(6)).toBe(6);
+    expect(defaultList.getInsertionIndex(3)).toBe(4);
+  });
+
   it('getInsertionIndex returns correct indices for various cases', () => {
     [2, 4, 6, 8].forEach((x) => list.insert(x));
     expect(list.getInsertionIndex(1)).toBe(0);
