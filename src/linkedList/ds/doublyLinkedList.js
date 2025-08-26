@@ -102,6 +102,18 @@ export class DoublyLinkedList extends LinkedList {
       return toDelete;
     }
 
+    if (index === this.count - 1) {
+      let toDelete = this.tail;
+      let previous = toDelete.prev;
+
+      toDelete.next = null;
+      previous.next = null;
+
+      this.tail = previous;
+      this.count--;
+      return toDelete;
+    }
+
     let current = this.head;
     for (let i = 0; i < index; i++) {
       current = current.next;
@@ -231,5 +243,22 @@ export class DoublyLinkedList extends LinkedList {
       current = current.next;
     }
     return objString + ` ${this.tail.element}`;
+  }
+
+  /**Helpers to inherit */
+  pushFront(element) {
+    return this.insert(element, 0);
+  }
+
+  pushBack(element) {
+    return this.push(element);
+  }
+
+  popFront() {
+    return this.removeAt(0);
+  }
+
+  popBack() {
+    return this.removeAt(this.size() - 1);
   }
 }
