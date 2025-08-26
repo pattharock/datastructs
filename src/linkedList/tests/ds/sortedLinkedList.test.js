@@ -12,6 +12,12 @@ describe('SortedLinkedList', () => {
     list = new SortedLinkedList(eq, asc);
   });
 
+  it('insertion index for empty list is always 0', () => {
+    expect(list.getInsertionIndex(10000)).toEqual(0);
+    expect(list.getInsertionIndex(20000)).toEqual(0);
+    expect(list.getInsertionIndex(30000)).toEqual(0);
+  });
+
   it('inserts into an empty list at index 0', () => {
     const ok = list.insert(10);
     expect(ok).toBe(true);
