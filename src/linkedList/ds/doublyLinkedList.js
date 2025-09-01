@@ -119,18 +119,6 @@ export class DoublyLinkedList extends LinkedList {
       current = current.next;
     }
 
-    if (current === this.tail) {
-      let previous = current.prev;
-      const toDelete = current;
-
-      previous.next = null;
-      toDelete.prev = null;
-      this.tail = previous;
-
-      this.count--;
-      return toDelete;
-    }
-
     let previous = current.prev;
     const toDelete = current;
 
