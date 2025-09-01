@@ -1,17 +1,37 @@
+import { DoublyLinkedList } from '../../linkedList/ds/doublyLinkedList.js';
+
 export class Queue {
-  constructor() {}
+  constructor() {
+    this.items = new DoublyLinkedList();
+  }
 
-  enqueue(element) {}
+  enqueue(element) {
+    return this.items.pushBack(element);
+  }
 
-  dequeue() {}
+  dequeue() {
+    const node = this.items.popFront();
+    return node?.element ?? undefined;
+  }
 
-  peek() {}
+  peek() {
+    const node = this.items.getElementAt(0);
+    return node?.element ?? undefined;
+  }
 
-  size() {}
+  size() {
+    return this.items.count;
+  }
 
-  isEmpty() {}
+  isEmpty() {
+    return this.items.isEmpty();
+  }
 
-  clear() {}
+  clear() {
+    this.items = new DoublyLinkedList();
+  }
 
-  toString() {}
+  toString() {
+    return this.items.toString();
+  }
 }
